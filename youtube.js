@@ -1,7 +1,13 @@
+/*
+ * Simple wrapper for YT <iframe> embedded API
+ * Iframe API shows an HTML5 player for mobile devices
+ * that do not support Flash
+ */
 (function(window, undefined) {
-
+    //TODO: Replace 'myAppVar' with your app namespace
     var myAppVar = window.myAppVar || {};
-
+    
+    // Store reference to instances of videos
     myAppVar.videos = {};
 
     myAppVar.Video = function(opts, onPlayerReady, onPlayerStateChange) {
@@ -10,13 +16,19 @@
       this.width = opts.width;
       this.videoId = opts.videoId || '';
 
+      // Pass in meaningful callbacks as static instance methods, 
+      // otherwise falls to noop func
+      
       if (onPlayerReady) {
         this.onPlayerReady = onPlayerReady;
       }
+      
       if (onPlayerStateChange) {
         this.onPlayerStateChange = onPlayerStateChange;
       }
 
+      // Player variable values and demo here:
+      // https://developers.google.com/youtube/youtube_player_demo
       this.playerVars = {
         autohide: 0
       , autoplay: 0
@@ -33,6 +45,7 @@
       , html5: 1
       };
 
+      // Kick it off!
       this.init();
     };
 
@@ -55,6 +68,9 @@
       }
     , createGlobalFunctions: function() {
         var that = this;
+        // We have to create a function in the global namespace
+        // for the embedded player evoke. Using an alias, we can
+        // keep our player methods encapsulated in the clss
         window.onYouTubeIframeAPIReady = function() {
           return that.createPlayerInstance.call(that);
         };
@@ -76,9 +92,8 @@
             }
         });
       }
-    , onPlayerReady: function(evt) {
-      }
-    , onPlayerStateChange: function(evt) {
-      }
+    , onPlayerReady: function(evt) { /* noop */ }
+    , onPlayerStateChange: function(evt) { /* noop */ }
     };
-}(window));
+
+}(window, undefined));
